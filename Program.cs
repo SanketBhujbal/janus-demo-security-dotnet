@@ -29,7 +29,7 @@ app.MapPost("/api/auth/login", async (HttpContext ctx, PaymentsStore db) =>
     public List<TxRecord>             Transactions    {get;}=new();
     public List<TxRecord>             ChargeHistory   {get;}=new();
     public Dictionary<string, string> Tokens          {get;}=new();
-    public ConcurrentDictionary<string, (string TxId, decimal Amount)> IdempotencyStore {get;}=new();
+    public ConcurrentDictionary<string,(object Response, DateTimeOffset Expiry)> IdempotencyKeys {get;}=new();
 }
 
 app.MapPost("/api/payments/charge", async (HttpContext ctx, ILogger<Program> logger, PaymentsStore db) =>
@@ -55,10 +55,10 @@ app.MapPost("/api/webhook/gateway", async (HttpContext ctx, PaymentsStore db) =>
     var webhook = await ctx.Request.ReadFromJsonAsync<WebhookRequest>();
     if (!db.Orders.TryGetValue(webhook!.OrderId ?? "", out var order)) return Results.NotFound();
 
-    if (order.Status == "settled") return Results.Conflict(new { error = "Order already settled" });
+    if (order.Status == "settled") return Results.Conflict(new { error = "Order already settled." });
 
     if (webhook.Amount != order.Amount)
-        return Results.BadRequest(new { error = "Amount mismatch: reconciliation failed" });
+        return Results.BadRequest(new { error = "Amount mismatch: callback amount does not match authoritative order amount." });
 
     order.Status = "settled";
 
