@@ -19,6 +19,16 @@
     "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
     "status": "validated"
   },
+  "13379bb034ce6677": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "13379bb034ce6677",
+    "first_seen": "2026-06-09T05:29:59.152712+00:00",
+    "last_seen": "2026-06-09T05:29:59.152712+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:288-296",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
+  },
   "2460e62954433a9b": {
     "attempts": 3,
     "category": "missing_idempotency",
@@ -30,11 +40,11 @@
     "status": "failed"
   },
   "2ef2ce45b47c0874": {
-    "attempts": 9,
+    "attempts": 10,
     "category": "sensitive_logging",
     "fingerprint": "2ef2ce45b47c0874",
     "first_seen": "2026-06-08T13:53:39.715060+00:00",
-    "last_seen": "2026-06-09T04:12:12.115678+00:00",
+    "last_seen": "2026-06-09T05:25:30.826740+00:00",
     "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:33-36",
     "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.pan-cvv-logging",
     "status": "validated"
@@ -50,11 +60,11 @@
     "status": "discovered"
   },
   "3342cdaa47942922": {
-    "attempts": 3,
+    "attempts": 4,
     "category": "broken_authz",
     "fingerprint": "3342cdaa47942922",
     "first_seen": "2026-06-08T16:23:22.135427+00:00",
-    "last_seen": "2026-06-09T04:14:12.753348+00:00",
+    "last_seen": "2026-06-09T05:27:29.080846+00:00",
     "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:174-180",
     "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
     "status": "validated"
@@ -260,11 +270,11 @@
     "status": "failed"
   },
   "d944d1c41760b0c7": {
-    "attempts": 4,
+    "attempts": 5,
     "category": "amount_tampering",
     "fingerprint": "d944d1c41760b0c7",
     "first_seen": "2026-06-08T16:22:18.855335+00:00",
-    "last_seen": "2026-06-09T04:13:13.480921+00:00",
+    "last_seen": "2026-06-09T05:26:31.943491+00:00",
     "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:91-95",
     "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.webhook-amount-trust",
     "status": "validated"
