@@ -1,0 +1,171 @@
+{
+  "generated_at": "2026-06-14T14:07:21.037802+00:00",
+  "mode": "full",
+  "totals": {
+    "scanned": 4,
+    "exploited": 4,
+    "patched": 4,
+    "validated": 3,
+    "failed": 1
+  },
+  "framework_controls_triggered": {
+    "pci_dss": [
+      "3.3.1 - Do not retain SAD post-auth",
+      "3.3.2 - Encrypt SAD if retained",
+      "3.4 - Render PAN unreadable",
+      "6.2.4 - Prevent common vulnerabilities",
+      "6.4.1 - Protect public-facing web apps",
+      "7.1 - Limit access to system components",
+      "7.2 - Establish access control",
+      "10.2 - Implement audit logs"
+    ],
+    "owasp": [
+      "A09:2021 - Security Logging and Monitoring Failures",
+      "A04:2021 - Insecure Design",
+      "A03:2021 - Injection",
+      "A01:2021 - Broken Access Control"
+    ],
+    "soc2": [
+      "CC7.2 - Monitor system components for anomalies",
+      "CC6.1 - Logical access security",
+      "CC8.1 - Change management",
+      "CC6.6 - Transmission integrity",
+      "CC7.1 - System monitoring"
+    ],
+    "nist": [
+      "AU-3 - Content of audit records",
+      "SI-12 - Information management",
+      "SI-10 - Information input validation",
+      "AC-4 - Information flow enforcement",
+      "AC-3 - Access enforcement",
+      "AC-6 - Least privilege",
+      "SC-5 - Denial of service protection"
+    ]
+  },
+  "findings": [
+    {
+      "category": "sensitive_logging",
+      "status": "validated",
+      "severity": "high",
+      "title": "Sensitive card data (PAN, CVV/CVC/CAV2/CID, track/magstripe) appears to be passed to a logger. PCI DSS 3.2 prohibits storing CVV at all, and PAN must be masked (display first-6 + last-4 only). Mask or drop the value before logging.\n",
+      "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs",
+      "compliance_refs": {
+        "pci_dss": [
+          "3.3.1 - Do not retain SAD post-auth",
+          "3.3.2 - Encrypt SAD if retained",
+          "3.4 - Render PAN unreadable"
+        ],
+        "owasp": [
+          "A09:2021 - Security Logging and Monitoring Failures"
+        ],
+        "soc2": [
+          "CC7.2 - Monitor system components for anomalies"
+        ],
+        "nist": [
+          "AU-3 - Content of audit records",
+          "SI-12 - Information management"
+        ],
+        "gsf": [],
+        "iso25010": [],
+        "finops": []
+      },
+      "summary": "Sensitive authentication data (PAN, CVV, track data) must never be written to logs.",
+      "speedup_x": null,
+      "annual_dollars": null,
+      "annual_co2_grams": null
+    },
+    {
+      "category": "amount_tampering",
+      "status": "validated",
+      "severity": "high",
+      "title": "Payment-gateway callback handler trusts amount from the request without re-fetching the authoritative amount from your DB. Webhook callers can be spoofed (or replayed with altered values) -- always reconcile against your own order record before marking the order settled.\n",
+      "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs",
+      "compliance_refs": {
+        "pci_dss": [
+          "6.2.4 - Prevent common vulnerabilities",
+          "6.4.1 - Protect public-facing web apps"
+        ],
+        "owasp": [
+          "A04:2021 - Insecure Design",
+          "A03:2021 - Injection"
+        ],
+        "soc2": [
+          "CC6.1 - Logical access security",
+          "CC8.1 - Change management"
+        ],
+        "nist": [
+          "SI-10 - Information input validation",
+          "AC-4 - Information flow enforcement"
+        ],
+        "gsf": [],
+        "iso25010": [],
+        "finops": []
+      },
+      "summary": "Payment amounts must be reconciled server-side against the authoritative order record.",
+      "speedup_x": null,
+      "annual_dollars": null,
+      "annual_co2_grams": null
+    },
+    {
+      "category": "broken_authz",
+      "status": "validated",
+      "severity": "high",
+      "title": "Account/order/payment record is fetched by a caller-supplied id with no ownership check. Classic IDOR -- User A can read User B's account by changing the URL parameter. Verify the authenticated user owns the resource before returning it (e.g. UserId == User.GetUserId()).\n",
+      "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs",
+      "compliance_refs": {
+        "pci_dss": [
+          "7.1 - Limit access to system components",
+          "7.2 - Establish access control"
+        ],
+        "owasp": [
+          "A01:2021 - Broken Access Control"
+        ],
+        "soc2": [
+          "CC6.1 - Logical access security"
+        ],
+        "nist": [
+          "AC-3 - Access enforcement",
+          "AC-6 - Least privilege"
+        ],
+        "gsf": [],
+        "iso25010": [],
+        "finops": []
+      },
+      "summary": "Authorization checks must be enforced server-side for every resource access.",
+      "speedup_x": null,
+      "annual_dollars": null,
+      "annual_co2_grams": null
+    },
+    {
+      "category": "missing_idempotency",
+      "status": "failed",
+      "severity": "medium",
+      "title": "Payment-mutating endpoint persists a transaction/charge without checking for an Idempotency-Key header against a dedup store. Network retries and double-clicks will create duplicate charges. Require Idempotency-Key, persist (key -> response) with a TTL, and return the cached response on replay.\n",
+      "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs",
+      "compliance_refs": {
+        "pci_dss": [
+          "6.2.4 - Prevent common vulnerabilities",
+          "10.2 - Implement audit logs"
+        ],
+        "owasp": [
+          "A04:2021 - Insecure Design"
+        ],
+        "soc2": [
+          "CC6.6 - Transmission integrity",
+          "CC7.1 - System monitoring"
+        ],
+        "nist": [
+          "SC-5 - Denial of service protection",
+          "SI-10 - Information input validation"
+        ],
+        "gsf": [],
+        "iso25010": [],
+        "finops": []
+      },
+      "summary": "Mutating payment endpoints must implement idempotency-key deduplication to prevent double charges.",
+      "speedup_x": null,
+      "annual_dollars": null,
+      "annual_co2_grams": null
+    }
+  ]
+}
