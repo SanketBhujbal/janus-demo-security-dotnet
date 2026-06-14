@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("janus-demo-security-dotnet")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b15eae5221df5468f00f7e6d8507e25267f08a46")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2038835cb04a6bfba0377cb85918a1f4e1485754")]
 [assembly: System.Reflection.AssemblyProductAttribute("janus-demo-security-dotnet")]
 [assembly: System.Reflection.AssemblyTitleAttribute("janus-demo-security-dotnet")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
