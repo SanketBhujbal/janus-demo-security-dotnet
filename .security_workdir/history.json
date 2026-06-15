@@ -60,11 +60,11 @@
     "status": "failed"
   },
   "2ef2ce45b47c0874": {
-    "attempts": 16,
+    "attempts": 17,
     "category": "sensitive_logging",
     "fingerprint": "2ef2ce45b47c0874",
     "first_seen": "2026-06-08T13:53:39.715060+00:00",
-    "last_seen": "2026-06-15T10:45:01.554587+00:00",
+    "last_seen": "2026-06-15T18:07:13.293291+00:00",
     "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:33-36",
     "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.pan-cvv-logging",
     "status": "validated"
@@ -170,11 +170,11 @@
     "status": "failed"
   },
   "6593a183c61f72aa": {
-    "attempts": 2,
+    "attempts": 3,
     "category": "amount_tampering",
     "fingerprint": "6593a183c61f72aa",
     "first_seen": "2026-06-08T15:46:10.257672+00:00",
-    "last_seen": "2026-06-08T15:56:28.097911+00:00",
+    "last_seen": "2026-06-15T18:08:23.042210+00:00",
     "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:90-94",
     "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.webhook-amount-trust",
     "status": "validated"
@@ -236,6 +236,16 @@
     "first_seen": "2026-06-09T03:20:58.086852+00:00",
     "last_seen": "2026-06-09T03:20:58.086852+00:00",
     "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:291-299",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
+  },
+  "9979f44c2920b65b": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "9979f44c2920b65b",
+    "first_seen": "2026-06-15T18:11:47.402504+00:00",
+    "last_seen": "2026-06-15T18:11:47.402504+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:280-288",
     "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
     "status": "failed"
   },
@@ -398,6 +408,16 @@
     "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:58-58",
     "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
     "status": "discovered"
+  },
+  "f93b64d09062c0f5": {
+    "attempts": 1,
+    "category": "broken_authz",
+    "fingerprint": "f93b64d09062c0f5",
+    "first_seen": "2026-06-15T18:09:33.218101+00:00",
+    "last_seen": "2026-06-15T18:09:33.218101+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:169-175",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
+    "status": "validated"
   },
   "fa44b4bec92119ae": {
     "attempts": 3,

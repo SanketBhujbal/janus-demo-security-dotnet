@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-06-15T17:24:38.461587+00:00",
+  "generated_at": "2026-06-15T18:11:47.421325+00:00",
   "mode": "full",
   "totals": {
     "scanned": 4,
     "exploited": 4,
     "patched": 4,
-    "validated": 4,
-    "failed": 0
+    "validated": 3,
+    "failed": 1
   },
   "framework_controls_triggered": {
     "pci_dss": [
@@ -138,7 +138,7 @@
     },
     {
       "category": "missing_idempotency",
-      "status": "validated",
+      "status": "failed",
       "severity": "medium",
       "title": "Payment-mutating endpoint persists a transaction/charge without checking for an Idempotency-Key header against a dedup store. Network retries and double-clicks will create duplicate charges. Require Idempotency-Key, persist (key -> response) with a TTL, and return the cached response on replay.\n",
       "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs",
