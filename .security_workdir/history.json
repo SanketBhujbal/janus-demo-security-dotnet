@@ -1,0 +1,442 @@
+{
+  "009f06dc31475af4": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "009f06dc31475af4",
+    "first_seen": "2026-06-08T14:10:25.254320+00:00",
+    "last_seen": "2026-06-08T14:10:25.254320+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:218-224",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
+  },
+  "12a3935314f4a3bd": {
+    "attempts": 2,
+    "category": "broken_authz",
+    "fingerprint": "12a3935314f4a3bd",
+    "first_seen": "2026-06-08T15:57:25.570433+00:00",
+    "last_seen": "2026-06-09T03:18:17.483831+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:176-182",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
+    "status": "validated"
+  },
+  "13379bb034ce6677": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "13379bb034ce6677",
+    "first_seen": "2026-06-09T05:29:59.152712+00:00",
+    "last_seen": "2026-06-09T05:29:59.152712+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:288-296",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
+  },
+  "2460e62954433a9b": {
+    "attempts": 4,
+    "category": "missing_idempotency",
+    "fingerprint": "2460e62954433a9b",
+    "first_seen": "2026-06-08T16:31:15.202792+00:00",
+    "last_seen": "2026-06-10T12:51:39.725028+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:287-295",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
+  },
+  "2a846ec26a55f522": {
+    "attempts": 1,
+    "category": "amount_tampering",
+    "fingerprint": "2a846ec26a55f522",
+    "first_seen": "2026-06-15T17:22:23.170166+00:00",
+    "last_seen": "2026-06-15T17:22:23.170166+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:138-144",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.webhook-amount-trust",
+    "status": "validated"
+  },
+  "2de6b2491704bdab": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "2de6b2491704bdab",
+    "first_seen": "2026-06-09T08:16:43.189691+00:00",
+    "last_seen": "2026-06-09T08:16:43.189691+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:290-298",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
+  },
+  "2ef2ce45b47c0874": {
+    "attempts": 17,
+    "category": "sensitive_logging",
+    "fingerprint": "2ef2ce45b47c0874",
+    "first_seen": "2026-06-08T13:53:39.715060+00:00",
+    "last_seen": "2026-06-15T18:07:13.293291+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:33-36",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.pan-cvv-logging",
+    "status": "validated"
+  },
+  "31c2cf6cbbc72376": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "31c2cf6cbbc72376",
+    "first_seen": "2026-06-08T13:35:57.851570+00:00",
+    "last_seen": "2026-06-08T13:35:57.851570+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:350-350",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "discovered"
+  },
+  "3342cdaa47942922": {
+    "attempts": 5,
+    "category": "broken_authz",
+    "fingerprint": "3342cdaa47942922",
+    "first_seen": "2026-06-08T16:23:22.135427+00:00",
+    "last_seen": "2026-06-10T12:48:22.361859+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:174-180",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
+    "status": "validated"
+  },
+  "33e8b7a19b5f3553": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "33e8b7a19b5f3553",
+    "first_seen": "2026-06-14T14:09:04.197844+00:00",
+    "last_seen": "2026-06-14T14:09:04.197844+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:70-70",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "discovered"
+  },
+  "44e4f491b1f50e1a": {
+    "attempts": 1,
+    "category": "sensitive_logging",
+    "fingerprint": "44e4f491b1f50e1a",
+    "first_seen": "2026-06-08T13:30:48.482997+00:00",
+    "last_seen": "2026-06-08T13:30:48.482997+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:187-190",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.pan-cvv-logging",
+    "status": "discovered"
+  },
+  "5856986a1013a5d7": {
+    "attempts": 1,
+    "category": "amount_tampering",
+    "fingerprint": "5856986a1013a5d7",
+    "first_seen": "2026-06-14T14:08:15.502287+00:00",
+    "last_seen": "2026-06-14T14:08:15.502287+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:47-47",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.webhook-amount-trust",
+    "status": "discovered"
+  },
+  "59976c5311146512": {
+    "attempts": 1,
+    "category": "amount_tampering",
+    "fingerprint": "59976c5311146512",
+    "first_seen": "2026-06-08T13:18:01.024021+00:00",
+    "last_seen": "2026-06-08T13:18:01.024021+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:82-84",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.webhook-amount-trust",
+    "status": "validated"
+  },
+  "5a4fbf68775f400a": {
+    "attempts": 1,
+    "category": "amount_tampering",
+    "fingerprint": "5a4fbf68775f400a",
+    "first_seen": "2026-06-08T12:29:17.795450+00:00",
+    "last_seen": "2026-06-08T12:29:17.795450+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:62-63",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.amount-tampering",
+    "status": "discovered"
+  },
+  "5aec9d4779492ae8": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "5aec9d4779492ae8",
+    "first_seen": "2026-06-08T15:33:02.798043+00:00",
+    "last_seen": "2026-06-08T15:33:02.798043+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:217-223",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
+  },
+  "5eba798ffc6ee4fa": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "5eba798ffc6ee4fa",
+    "first_seen": "2026-06-15T17:24:38.457597+00:00",
+    "last_seen": "2026-06-15T17:24:38.457597+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:366-376",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "validated"
+  },
+  "610296602902db0c": {
+    "attempts": 4,
+    "category": "broken_authz",
+    "fingerprint": "610296602902db0c",
+    "first_seen": "2026-06-08T15:47:10.117912+00:00",
+    "last_seen": "2026-06-15T10:46:54.433942+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:172-178",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
+    "status": "failed"
+  },
+  "6593a183c61f72aa": {
+    "attempts": 3,
+    "category": "amount_tampering",
+    "fingerprint": "6593a183c61f72aa",
+    "first_seen": "2026-06-08T15:46:10.257672+00:00",
+    "last_seen": "2026-06-15T18:08:23.042210+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:90-94",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.webhook-amount-trust",
+    "status": "validated"
+  },
+  "6b422ce1f799c174": {
+    "attempts": 1,
+    "category": "sensitive_logging",
+    "fingerprint": "6b422ce1f799c174",
+    "first_seen": "2026-06-08T12:41:55.257590+00:00",
+    "last_seen": "2026-06-08T12:41:55.257590+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:57-59",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.pan-cvv-logging",
+    "status": "validated"
+  },
+  "73115a361c870a70": {
+    "attempts": 1,
+    "category": "sensitive_logging",
+    "fingerprint": "73115a361c870a70",
+    "first_seen": "2026-06-15T17:21:16.174644+00:00",
+    "last_seen": "2026-06-15T17:21:16.174644+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:65-71",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.pan-cvv-logging",
+    "status": "validated"
+  },
+  "8a7d8a0f9af53dab": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "8a7d8a0f9af53dab",
+    "first_seen": "2026-06-08T12:54:02.430322+00:00",
+    "last_seen": "2026-06-08T12:54:02.430322+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:569-584",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
+  },
+  "954924ed61354153": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "954924ed61354153",
+    "first_seen": "2026-06-08T12:33:38.802636+00:00",
+    "last_seen": "2026-06-08T12:33:38.802636+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:112-113",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "discovered"
+  },
+  "9570c18af60a488e": {
+    "attempts": 1,
+    "category": "broken_authz",
+    "fingerprint": "9570c18af60a488e",
+    "first_seen": "2026-06-15T17:23:15.798654+00:00",
+    "last_seen": "2026-06-15T17:23:15.798654+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:234-242",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
+    "status": "validated"
+  },
+  "98dc082a5c271d20": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "98dc082a5c271d20",
+    "first_seen": "2026-06-09T03:20:58.086852+00:00",
+    "last_seen": "2026-06-09T03:20:58.086852+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:291-299",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
+  },
+  "9979f44c2920b65b": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "9979f44c2920b65b",
+    "first_seen": "2026-06-15T18:11:47.402504+00:00",
+    "last_seen": "2026-06-15T18:11:47.402504+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:280-288",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
+  },
+  "9b00a4083dc14662": {
+    "attempts": 1,
+    "category": "amount_tampering",
+    "fingerprint": "9b00a4083dc14662",
+    "first_seen": "2026-06-08T12:44:16.819030+00:00",
+    "last_seen": "2026-06-08T12:44:16.819030+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:64-67",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.amount-tampering",
+    "status": "failed"
+  },
+  "a3e8fdd679fd7806": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "a3e8fdd679fd7806",
+    "first_seen": "2026-06-08T15:50:00.061752+00:00",
+    "last_seen": "2026-06-08T15:50:00.061752+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:285-293",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
+  },
+  "a8c1f228fcd82e71": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "a8c1f228fcd82e71",
+    "first_seen": "2026-06-08T13:58:03.166204+00:00",
+    "last_seen": "2026-06-08T13:58:03.166204+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:216-222",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
+  },
+  "a9ee5cfb57799c22": {
+    "attempts": 1,
+    "category": "broken_authz",
+    "fingerprint": "a9ee5cfb57799c22",
+    "first_seen": "2026-06-09T08:14:20.471210+00:00",
+    "last_seen": "2026-06-09T08:14:20.471210+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:175-181",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
+    "status": "validated"
+  },
+  "aedbb8a8ea8ee64f": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "aedbb8a8ea8ee64f",
+    "first_seen": "2026-06-08T12:31:24.915026+00:00",
+    "last_seen": "2026-06-08T12:31:24.915026+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:62-63",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "discovered"
+  },
+  "b4d80666f721db9f": {
+    "attempts": 1,
+    "category": "broken_authz",
+    "fingerprint": "b4d80666f721db9f",
+    "first_seen": "2026-06-08T13:19:06.755544+00:00",
+    "last_seen": "2026-06-08T13:19:06.755544+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:196-200",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
+    "status": "failed"
+  },
+  "b4f2858ba16775e7": {
+    "attempts": 3,
+    "category": "broken_authz",
+    "fingerprint": "b4f2858ba16775e7",
+    "first_seen": "2026-06-08T13:55:50.769255+00:00",
+    "last_seen": "2026-06-08T15:30:23.656529+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:119-123",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
+    "status": "validated"
+  },
+  "b8c96b5243c53a40": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "b8c96b5243c53a40",
+    "first_seen": "2026-06-08T13:21:14.009676+00:00",
+    "last_seen": "2026-06-08T13:21:14.009676+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:111-111",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "discovered"
+  },
+  "bfb91e83c886b102": {
+    "attempts": 1,
+    "category": "sensitive_logging",
+    "fingerprint": "bfb91e83c886b102",
+    "first_seen": "2026-06-08T12:25:56.655851+00:00",
+    "last_seen": "2026-06-08T12:25:56.655851+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:58-59",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.pan-cvv-logging",
+    "status": "discovered"
+  },
+  "cd33e2f95d0d3bbe": {
+    "attempts": 2,
+    "category": "missing_idempotency",
+    "fingerprint": "cd33e2f95d0d3bbe",
+    "first_seen": "2026-06-14T14:19:21.755622+00:00",
+    "last_seen": "2026-06-15T08:13:50.490009+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:282-290",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
+  },
+  "d17f6c14c73645ba": {
+    "attempts": 1,
+    "category": "broken_authz",
+    "fingerprint": "d17f6c14c73645ba",
+    "first_seen": "2026-06-08T13:33:49.202554+00:00",
+    "last_seen": "2026-06-08T13:33:49.202554+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:304-304",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
+    "status": "discovered"
+  },
+  "d1dbd722b00f34d0": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "d1dbd722b00f34d0",
+    "first_seen": "2026-06-08T16:00:10.263294+00:00",
+    "last_seen": "2026-06-08T16:00:10.263294+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:292-300",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
+  },
+  "d944d1c41760b0c7": {
+    "attempts": 10,
+    "category": "amount_tampering",
+    "fingerprint": "d944d1c41760b0c7",
+    "first_seen": "2026-06-08T16:22:18.855335+00:00",
+    "last_seen": "2026-06-15T10:46:02.765341+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:91-95",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.webhook-amount-trust",
+    "status": "validated"
+  },
+  "e14ae41f6c8f1912": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "e14ae41f6c8f1912",
+    "first_seen": "2026-06-15T10:49:34.320219+00:00",
+    "last_seen": "2026-06-15T10:49:34.320219+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:283-291",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
+  },
+  "f10347495b4bf825": {
+    "attempts": 1,
+    "category": "sensitive_logging",
+    "fingerprint": "f10347495b4bf825",
+    "first_seen": "2026-06-08T13:16:50.145187+00:00",
+    "last_seen": "2026-06-08T13:16:50.145187+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:58-60",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.pan-cvv-logging",
+    "status": "validated"
+  },
+  "f519ea685af68d0f": {
+    "attempts": 1,
+    "category": "broken_authz",
+    "fingerprint": "f519ea685af68d0f",
+    "first_seen": "2026-06-14T14:08:39.774247+00:00",
+    "last_seen": "2026-06-14T14:08:39.774247+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:58-58",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
+    "status": "discovered"
+  },
+  "f93b64d09062c0f5": {
+    "attempts": 1,
+    "category": "broken_authz",
+    "fingerprint": "f93b64d09062c0f5",
+    "first_seen": "2026-06-15T18:09:33.218101+00:00",
+    "last_seen": "2026-06-15T18:09:33.218101+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:169-175",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
+    "status": "validated"
+  },
+  "fa44b4bec92119ae": {
+    "attempts": 3,
+    "category": "amount_tampering",
+    "fingerprint": "fa44b4bec92119ae",
+    "first_seen": "2026-06-08T13:54:39.974454+00:00",
+    "last_seen": "2026-06-08T15:29:22.679182+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:50-52",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.webhook-amount-trust",
+    "status": "validated"
+  },
+  "fb11efb491e9c04a": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "fb11efb491e9c04a",
+    "first_seen": "2026-06-08T12:52:38.039007+00:00",
+    "last_seen": "2026-06-08T12:52:38.039007+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:127-133",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
+  }
+}
