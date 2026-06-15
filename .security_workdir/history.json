@@ -50,11 +50,11 @@
     "status": "failed"
   },
   "2ef2ce45b47c0874": {
-    "attempts": 15,
+    "attempts": 16,
     "category": "sensitive_logging",
     "fingerprint": "2ef2ce45b47c0874",
     "first_seen": "2026-06-08T13:53:39.715060+00:00",
-    "last_seen": "2026-06-15T08:07:52.534485+00:00",
+    "last_seen": "2026-06-15T10:45:01.554587+00:00",
     "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:33-36",
     "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.pan-cvv-logging",
     "status": "validated"
@@ -140,14 +140,14 @@
     "status": "failed"
   },
   "610296602902db0c": {
-    "attempts": 3,
+    "attempts": 4,
     "category": "broken_authz",
     "fingerprint": "610296602902db0c",
     "first_seen": "2026-06-08T15:47:10.117912+00:00",
-    "last_seen": "2026-06-15T08:10:26.401729+00:00",
+    "last_seen": "2026-06-15T10:46:54.433942+00:00",
     "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:172-178",
     "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
-    "status": "validated"
+    "status": "failed"
   },
   "6593a183c61f72aa": {
     "attempts": 2,
@@ -320,14 +320,24 @@
     "status": "failed"
   },
   "d944d1c41760b0c7": {
-    "attempts": 9,
+    "attempts": 10,
     "category": "amount_tampering",
     "fingerprint": "d944d1c41760b0c7",
     "first_seen": "2026-06-08T16:22:18.855335+00:00",
-    "last_seen": "2026-06-15T08:09:10.886993+00:00",
+    "last_seen": "2026-06-15T10:46:02.765341+00:00",
     "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:91-95",
     "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.webhook-amount-trust",
     "status": "validated"
+  },
+  "e14ae41f6c8f1912": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "e14ae41f6c8f1912",
+    "first_seen": "2026-06-15T10:49:34.320219+00:00",
+    "last_seen": "2026-06-15T10:49:34.320219+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:283-291",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
   },
   "f10347495b4bf825": {
     "attempts": 1,

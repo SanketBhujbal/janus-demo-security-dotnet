@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-06-15T08:13:50.504210+00:00",
+  "generated_at": "2026-06-15T10:49:34.328772+00:00",
   "mode": "full",
   "totals": {
     "scanned": 4,
     "exploited": 4,
     "patched": 4,
-    "validated": 3,
-    "failed": 1
+    "validated": 2,
+    "failed": 2
   },
   "framework_controls_triggered": {
     "pci_dss": [
@@ -108,7 +108,7 @@
     },
     {
       "category": "broken_authz",
-      "status": "validated",
+      "status": "failed",
       "severity": "high",
       "title": "Account/order/payment record is fetched by a caller-supplied id with no ownership check. Classic IDOR -- User A can read User B's account by changing the URL parameter. Verify the authenticated user owns the resource before returning it (e.g. UserId == User.GetUserId()).\n",
       "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs",

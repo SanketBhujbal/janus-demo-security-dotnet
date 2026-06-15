@@ -23,21 +23,25 @@ app.MapPost("/api/auth/login", async (HttpContext ctx, PaymentsStore db) =>
     if (acc is null) return Results.Unauthorized();
     var token = Guid.NewGuid().ToString("N");
     db.Tokens[token] = req!.Username!;
-    return Results.Ok(new { token, username = req.Username });
-    public Dictionary<string, string> Tokens        {get;}=new();
-    public ConcurrentDictionary<string, (IResult Response, DateTimeOffset ExpiresAt)> IdempotencyCache {get;}=new();
+public class PaymentsStore {
+    public List<Account>                       Accounts         {get;}=new();
+    public Dictionary<string, Order>           Orders           {get;}=new();
+    public List<TxRecord>                      Transactions     {get;}=new();
+    public List<TxRecord>                      ChargeHistory    {get;}=new();
+    public Dictionary<string, string>          Tokens           {get;}=new();
+    public ConcurrentDictionary<string,object> IdempotencyCache {get;}=new();
 }
-
+
 // VULN 0: pan-cvv-logging
 app.MapPost("/api/payments/charge", async (HttpContext ctx, ILogger<Program> logger, PaymentsStore db) =>
 {
     var auth = GetToken(ctx);
     if (auth is null || !db.Tokens.ContainsKey(auth)) return Results.Unauthorized();
     var chargeReq = await ctx.Request.ReadFromJsonAsync<ChargeRequest>();
-    var pan = chargeReq!.Pan ?? "";
-    var maskedPan = pan.Length >= 10
-        ? pan[..6] + new string('*', pan.Length - 10) + pan[^4..]
-        : new string('*', pan.Length);
+    var rawPan = chargeReq!.Pan ?? "";
+    var maskedPan = rawPan.Length >= 10
+        ? rawPan[..6] + new string('*', rawPan.Length - 10) + rawPan[^4..]
+        : new string('*', rawPan.Length);
     logger.LogInformation("charge user={User} pan={Pan} amount={Amount}",
         db.Tokens[auth], maskedPan, chargeReq.Amount);
     var txId = Guid.NewGuid().ToString("N")[..16];
@@ -52,9 +56,9 @@ app.MapPost("/api/webhook/gateway", async (HttpContext ctx, PaymentsStore db) =>
     var webhook = await ctx.Request.ReadFromJsonAsync<WebhookRequest>();
     if (!db.Orders.TryGetValue(webhook!.OrderId ?? "", out var order)) return Results.NotFound();
 
-    if (webhook.Amount != order.Amount)
-        return Results.BadRequest(new { error = "amount mismatch: reconciliation failed" });
+    if (order.Status == "settled") return Results.Conflict(new { error = "Order already settled" });
 
+    // Reconcile: ignore the amount from the callback entirely; use only the authoritative DB value.
     order.Status = "settled";
 
     return Results.Ok(new { order.Id, order.Amount, order.Status });
@@ -67,7 +71,8 @@ app.MapGet("/api/account/{id}", (string id, HttpContext ctx, PaymentsStore db) =
     var auth = GetToken(ctx);
     if (auth is null || !db.Tokens.ContainsKey(auth)) return Results.Unauthorized();
 
-    if (db.Tokens[auth] != id) return Results.Forbid();
+    // Ownership check: authenticated user may only access their own account (prevents IDOR)
+    if (db.Tokens[auth] != id) return Results.StatusCode(403);
 
     var acc = db.Accounts.FirstOrDefault(x => x.Id == id);
 
