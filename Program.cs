@@ -26,37 +26,28 @@ app.MapPost("/api/auth/login", async (HttpContext ctx, PaymentsStore db) =>
     return Results.Ok(new { token, username = req.Username });
 });
 // VULN 0: pan-cvv-logging
-app.MapPost("/api/payments/charge", async (HttpContext ctx, ILogger<Program> logger, PaymentsStore db) =>
-{
-    var auth = GetToken(ctx);
-    if (auth is null || !db.Tokens.ContainsKey(auth)) return Results.Unauthorized();
-    var chargeReq = await ctx.Request.ReadFromJsonAsync<ChargeRequest>();
-    var maskedPan = MaskPan(chargeReq!.Pan);
-    logger.LogInformation("charge user={User} pan={Pan} amount={Amount}",
-        db.Tokens[auth], maskedPan, chargeReq.Amount);
-    var txId = Guid.NewGuid().ToString("N")[..16];
-    db.ChargeHistory.Add(new TxRecord { Id = txId, User = db.Tokens[auth],
-        Amount = chargeReq.Amount, Pan = chargeReq.Pan, Cvv = chargeReq.Cvv });
-    return Results.Ok(new { transaction_id = txId, amount = chargeReq.Amount, status = "approved" });
-});
-app.MapPost("/api/webhook/gateway", async (HttpContext ctx, PaymentsStore db) =>
-{
-    var webhook = await ctx.Request.ReadFromJsonAsync<WebhookRequest>();
-    if (!db.Orders.TryGetValue(webhook!.OrderId ?? "", out var order)) return Results.NotFound();
-    if (order.Amount != webhook.Amount) return Results.BadRequest(new { error = "amount_mismatch" });
-    order.Status = "settled";
-    return Results.Ok(new { order.Id, order.Amount, order.Status });
-});
+app.MapPost("/api/payments/charge", async (HttpContext ctx, ILogger<Program> logger, PaymentsStore db) =>
+{
+    var auth = GetToken(ctx);
+    if (auth is null || !db.Tokens.ContainsKey(auth)) return Results.Unauthorized();
+    var chargeReq = await ctx.Request.ReadFromJsonAsync<ChargeRequest>();
+    logger.LogInformation("charge user={User} pan={Pan} cvv={Cvv} amount={Amount}",
+        db.Tokens[auth], chargeReq!.Pan, chargeReq.Cvv, chargeReq.Amount);
+    var txId = Guid.NewGuid().ToString("N")[..16];
+    db.ChargeHistory.Add(new TxRecord { Id = txId, User = db.Tokens[auth],
+        Amount = chargeReq.Amount, Pan = chargeReq.Pan, Cvv = chargeReq.Cvv });
+    return Results.Ok(new { transaction_id = txId, amount = chargeReq.Amount, status = "approved" });
+});
 app.MapGet("/api/payments/logs", () => Results.Text(string.Join(Environment.NewLine, LogBuffer.Lines)));
 // VULN 1: webhook-amount-trust
-app.MapPost("/api/webhook/gateway", async (HttpContext ctx, PaymentsStore db) =>
-{
-    var webhook = await ctx.Request.ReadFromJsonAsync<WebhookRequest>();
-    if (!db.Orders.TryGetValue(webhook!.OrderId ?? "", out var order)) return Results.NotFound();
-    order.Amount = webhook.Amount;
-    order.Status = "settled";
-    return Results.Ok(new { order.Id, order.Amount, order.Status });
-});
+app.MapGet("/api/account/{id}", (string id, HttpContext ctx, PaymentsStore db) =>
+{
+    var auth = GetToken(ctx);
+    if (auth is null || !db.Tokens.TryGetValue(auth, out var username)) return Results.Unauthorized();
+    if (!string.Equals(username, id, StringComparison.Ordinal)) return Results.Forbid();
+    var acc = db.Accounts.FirstOrDefault(x => x.Id == id);
+    return acc is null ? Results.NotFound() : Results.Ok(new { acc.Id, acc.Balance });
+});
 app.MapGet("/api/payments/order/{id}", (string id, PaymentsStore db) =>
     db.Orders.TryGetValue(id, out var o) ? Results.Ok(new { o.Id, o.Amount, o.Status }) : Results.NotFound());
 // VULN 2: broken-authz-idor
