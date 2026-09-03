@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-08-26T06:38:43.024163+00:00",
+  "generated_at": "2026-09-03T15:31:13.020831+00:00",
   "mode": "full",
   "totals": {
     "scanned": 4,
     "exploited": 4,
-    "patched": 2,
+    "patched": 3,
     "validated": 2,
     "failed": 2
   },
@@ -45,7 +45,7 @@
   "findings": [
     {
       "category": "sensitive_logging",
-      "status": "failed",
+      "status": "validated",
       "severity": "high",
       "title": "Sensitive card data (PAN, CVV/CVC/CAV2/CID, track/magstripe) appears to be passed to a logger. PCI DSS 3.2 prohibits storing CVV at all, and PAN must be masked (display first-6 + last-4 only). Mask or drop the value before logging.\n",
       "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs",
@@ -108,7 +108,7 @@
     },
     {
       "category": "broken_authz",
-      "status": "validated",
+      "status": "failed",
       "severity": "high",
       "title": "Account/order/payment record is fetched by a caller-supplied id with no ownership check. Classic IDOR -- User A can read User B's account by changing the URL parameter. Verify the authenticated user owns the resource before returning it (e.g. UserId == User.GetUserId()).\n",
       "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs",

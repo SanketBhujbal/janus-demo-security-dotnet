@@ -9,6 +9,16 @@
     "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
     "status": "failed"
   },
+  "06d46ebffb91e355": {
+    "attempts": 1,
+    "category": "broken_authz",
+    "fingerprint": "06d46ebffb91e355",
+    "first_seen": "2026-09-03T15:29:13.900648+00:00",
+    "last_seen": "2026-09-03T15:29:13.900648+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:85-94",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
+    "status": "failed"
+  },
   "12a3935314f4a3bd": {
     "attempts": 2,
     "category": "broken_authz",
@@ -120,14 +130,14 @@
     "status": "discovered"
   },
   "54e88739fc78d62b": {
-    "attempts": 2,
+    "attempts": 3,
     "category": "sensitive_logging",
     "fingerprint": "54e88739fc78d62b",
     "first_seen": "2026-08-26T06:26:36.204398+00:00",
-    "last_seen": "2026-08-26T06:34:25.817018+00:00",
+    "last_seen": "2026-09-03T15:25:25.305227+00:00",
     "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:29-40",
     "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.pan-cvv-logging",
-    "status": "failed"
+    "status": "validated"
   },
   "5856986a1013a5d7": {
     "attempts": 1,
@@ -228,6 +238,16 @@
     "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:85-92",
     "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.broken-authz-idor",
     "status": "validated"
+  },
+  "79df394662618e00": {
+    "attempts": 1,
+    "category": "missing_idempotency",
+    "fingerprint": "79df394662618e00",
+    "first_seen": "2026-09-03T15:31:12.986892+00:00",
+    "last_seen": "2026-09-03T15:31:12.986892+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:233-241",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.missing-idempotency",
+    "status": "failed"
   },
   "8a7d8a0f9af53dab": {
     "attempts": 1,
@@ -456,6 +476,16 @@
     "first_seen": "2026-08-26T06:35:31.610503+00:00",
     "last_seen": "2026-08-26T06:35:31.610503+00:00",
     "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:43-50",
+    "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.webhook-amount-trust",
+    "status": "validated"
+  },
+  "f81de888fd8ab61a": {
+    "attempts": 1,
+    "category": "amount_tampering",
+    "fingerprint": "f81de888fd8ab61a",
+    "first_seen": "2026-09-03T15:27:56.249674+00:00",
+    "last_seen": "2026-09-03T15:27:56.249674+00:00",
+    "location": "C:\\Users\\bhujbalsa\\janus-demo-security-dotnet\\Program.cs:57-71",
     "rule_id": "orchestrator.rules.payments_dotnet.payments.dotnet.webhook-amount-trust",
     "status": "validated"
   },
